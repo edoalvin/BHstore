@@ -1,14 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ShoppingCart, MessageCircle } from "lucide-react";
-import { products } from "@/data/products";
-import { Product } from "@/types";
+import { ShoppingCart, MessageCircle, Loader2 } from "lucide-react";
 
-type Category = Product["category"];
+type Category = "all" | "daily" | "sport" | "maternity";
 
-const categories: { label: string; value: Category | "all" }[] = [
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  category: "daily" | "sport" | "maternity";
+  badge: string | null;
+}
+
+const categories: { label: string; value: Category }[] = [
   { label: "Semua", value: "all" },
   { label: "Daily", value: "daily" },
   { label: "Sport", value: "sport" },
@@ -31,7 +38,6 @@ function ProductCard({ product }: { product: Product }) {
 
   return (
     <div className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl hover:shadow-pink-100 transition-all duration-300">
-      {/* Image */}
       <div className="relative overflow-hidden bg-pink-50">
         <Image
           src={product.image}
@@ -48,7 +54,6 @@ function ProductCard({ product }: { product: Product }) {
         )}
       </div>
 
-      {/* Info */}
       <div className="p-4">
         <h3 className="font-semibold text-gray-900 mb-1 text-sm md:text-base">
           {product.name}
@@ -56,7 +61,6 @@ function ProductCard({ product }: { product: Product }) {
         <p className="text-pink-600 font-bold text-lg mb-4">
           {formatPrice(product.price)}
         </p>
-
         <a
           href={waLink}
           target="_blank"
@@ -71,13 +75,48 @@ function ProductCard({ product }: { product: Product }) {
   );
 }
 
-export default function ProductsSection() {
-  const [activeCategory, setActiveCategory] = useState<Category | "all">("all");
+function ProductSkeleton() {
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden animate-pulse">
+      <div className="w-full h-52 bg-pink-100" />
+      <div className="p-4 space-y-3">
+        <div className="h-4 bg-gray-200 rounded w-3/4" />
+        <div className="h-5 bg-pink-100 rounded w-1/2" />
+        <div className="h-10 bg-gray-100 rounded-xl" />
+      </div>
+    </div>
+  );
+}
 
-  const filtered =
-    activeCategory === "all"
-      ? products
-      : products.filter((p) => p.category === activeCategory);
+export default function ProductsSection() {
+  const [activeCategory, setActiveCategory] = useState<Category>("all");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const url =
+          activeCategory === "all"
+            ? "/api/products"
+            : `/api/products?category=${activeCategory}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Gagal memuat produk");
+        const data: Product[] = await res.json();
+        setProducts(data);
+      } catch (err) {
+        setError("Gagal memuat produk. Periksa koneksi database.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [activeCategory]);
 
   return (
     <section id="produk" className="py-20 bg-pink-50/40">
@@ -91,8 +130,8 @@ export default function ProductsSection() {
             Produk <span className="text-pink-600">Unggulan</span>
           </h2>
           <p className="text-gray-500 max-w-xl mx-auto">
-            Pilihan bra terbaik untuk setiap kebutuhan — dari aktivitas sehari-hari
-            hingga olahraga intensif.
+            Pilihan bra terbaik untuk setiap kebutuhan — dari aktivitas
+            sehari-hari hingga olahraga intensif.
           </p>
         </div>
 
@@ -113,12 +152,36 @@ export default function ProductsSection() {
           ))}
         </div>
 
+        {/* Error */}
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-red-500 font-medium">{error}</p>
+          </div>
+        )}
+
+        {/* Loading Skeleton */}
+        {loading && !error && (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <ProductSkeleton key={i} />
+            ))}
+          </div>
+        )}
+
         {/* Products Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {!loading && !error && products.length === 0 && (
+          <div className="text-center py-16 text-gray-400">
+            <p className="text-lg">Belum ada produk di kategori ini.</p>
+          </div>
+        )}
+
+        {!loading && !error && products.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
 
         {/* Bottom CTA */}
         <div className="text-center mt-12">

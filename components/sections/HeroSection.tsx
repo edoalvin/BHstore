@@ -67,6 +67,7 @@ export default function HeroSection() {
               src="/image/BH1.jpeg"
               alt="Koleksi BHstore"
               fill
+              sizes="(max-width: 768px) 288px, 384px"
               className="object-cover"
               priority
             />
