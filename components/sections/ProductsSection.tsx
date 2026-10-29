@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ShoppingCart, MessageCircle, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { ShoppingCart, MessageCircle } from "lucide-react";
 
 type Category = "all" | "daily" | "sport" | "maternity";
 
@@ -38,38 +39,56 @@ function ProductCard({ product }: { product: Product }) {
 
   return (
     <div className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl hover:shadow-pink-100 transition-all duration-300">
-      <div className="relative overflow-hidden bg-pink-50">
-        <Image
-          src={product.image}
-          alt={product.name}
-          width={400}
-          height={400}
-          className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
-          unoptimized
-        />
-        {product.badge && (
-          <span className="absolute top-3 left-3 bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-            {product.badge}
-          </span>
-        )}
-      </div>
+      {/* Clickable image area → detail page */}
+      <Link href={`/products/${product.id}`} className="block">
+        <div className="relative overflow-hidden bg-pink-50">
+          <Image
+            src={encodeURI(product.image)}
+            alt={product.name}
+            width={400}
+            height={400}
+            className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          {product.badge && (
+            <span className="absolute top-3 left-3 bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+              {product.badge}
+            </span>
+          )}
+          {/* Hover overlay */}
+          <div className="absolute inset-0 bg-pink-900/0 group-hover:bg-pink-900/10 transition-colors duration-300 flex items-center justify-center">
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-pink-600 text-xs font-bold px-3 py-1.5 rounded-full shadow">
+              Lihat Detail
+            </span>
+          </div>
+        </div>
+      </Link>
 
       <div className="p-4">
-        <h3 className="font-semibold text-gray-900 mb-1 text-sm md:text-base">
-          {product.name}
-        </h3>
+        <Link href={`/products/${product.id}`}>
+          <h3 className="font-semibold text-gray-900 mb-1 text-sm md:text-base hover:text-pink-600 transition-colors cursor-pointer line-clamp-2">
+            {product.name}
+          </h3>
+        </Link>
         <p className="text-pink-600 font-bold text-lg mb-4">
           {formatPrice(product.price)}
         </p>
-        <a
-          href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full bg-pink-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-pink-700 transition-colors"
-        >
-          <MessageCircle className="w-4 h-4" />
-          Pesan via WA
-        </a>
+        <div className="flex gap-2">
+          <Link
+            href={`/products/${product.id}`}
+            className="flex-1 flex items-center justify-center gap-1.5 border border-pink-200 text-pink-600 py-2 rounded-xl text-xs font-semibold hover:bg-pink-50 transition-colors"
+          >
+            Detail
+          </Link>
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex items-center justify-center gap-1.5 bg-pink-600 text-white py-2 rounded-xl text-xs font-semibold hover:bg-pink-700 transition-colors"
+          >
+            <MessageCircle className="w-3.5 h-3.5" />
+            Pesan WA
+          </a>
+        </div>
       </div>
     </div>
   );

@@ -9,6 +9,9 @@ CREATE TABLE "Product" (
     "image" TEXT NOT NULL,
     "category" "Category" NOT NULL,
     "badge" TEXT,
+    "description" TEXT,
+    "colors" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "sizes" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

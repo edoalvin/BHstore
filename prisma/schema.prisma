@@ -8,14 +8,17 @@ datasource db {
 }
 
 model Product {
-  id        Int      @id @default(autoincrement())
-  name      String
-  price     Int
-  image     String
-  category  Category
-  badge     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Int
+  image       String
+  category    Category
+  badge       String?
+  description String?
+  colors      String[] @default([])
+  sizes       String[] @default([])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum Category {
