@@ -26,6 +26,7 @@ interface Product {
   description: string | null;
   colors: string[];
   sizes: string[];
+  colorImages: Record<string, string>;
 }
 
 const categoryLabel: Record<string, string> = {
@@ -99,6 +100,7 @@ export default function ProductDetailClient() {
   const [error, setError] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [displayImage, setDisplayImage] = useState<string>("");
 
   useEffect(() => {
     if (!params.id) return;
@@ -109,12 +111,12 @@ export default function ProductDetailClient() {
         const json = await res.json();
 
         if (!res.ok) {
-          // tampilkan pesan error dari server jika ada
           setError(json?.error ?? "Produk tidak ditemukan.");
           return;
         }
 
         setProduct(json);
+        setDisplayImage(json.image);
         if (json.colors?.length > 0) setSelectedColor(json.colors[0]);
         if (json.sizes?.length > 0) setSelectedSize(json.sizes[0]);
       } catch (err) {
@@ -124,8 +126,18 @@ export default function ProductDetailClient() {
         setLoading(false);
       }
     };
+
     fetchProduct();
   }, [params.id]);
+
+  // Ganti gambar saat warna dipilih
+  const handleColorSelect = (color: string) => {
+    setSelectedColor(color);
+    if (!product) return;
+    // Cek apakah ada gambar untuk warna ini, kalau tidak pakai gambar utama
+    const colorImg = product.colorImages?.[color];
+    setDisplayImage(colorImg ?? product.image);
+  };
 
   const waMessage = product
     ? encodeURIComponent(
@@ -158,17 +170,11 @@ export default function ProductDetailClient() {
             <div className="max-w-5xl mx-auto px-4 py-10">
               {/* Breadcrumb */}
               <nav className="flex items-center gap-2 text-sm text-gray-400 mb-8 flex-wrap">
-                <Link
-                  href="/"
-                  className="hover:text-pink-600 transition-colors"
-                >
+                <Link href="/" className="hover:text-pink-600 transition-colors">
                   Beranda
                 </Link>
                 <span>/</span>
-                <Link
-                  href="/#produk"
-                  className="hover:text-pink-600 transition-colors"
-                >
+                <Link href="/#produk" className="hover:text-pink-600 transition-colors">
                   Produk
                 </Link>
                 <span>/</span>
@@ -178,20 +184,27 @@ export default function ProductDetailClient() {
               </nav>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-                {/* Product Image */}
+                {/* Product Image — berubah sesuai warna dipilih */}
                 <div className="relative aspect-square rounded-3xl overflow-hidden bg-pink-50 shadow-lg shadow-pink-100">
                   <Image
-                    src={encodeURI(product.image)}
-                    alt={product.name}
+                    key={displayImage}
+                    src={encodeURI(displayImage)}
+                    alt={`${product.name}${selectedColor ? ` - ${selectedColor}` : ""}`}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover"
+                    className="object-cover transition-opacity duration-300"
                     priority
                   />
                   {product.badge && (
                     <span className="absolute top-4 left-4 bg-pink-600 text-white text-sm font-bold px-4 py-1.5 rounded-full shadow">
                       {product.badge}
                     </span>
+                  )}
+                  {/* Label warna aktif di atas gambar */}
+                  {selectedColor && (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm">
+                      {selectedColor}
+                    </div>
                   )}
                 </div>
 
@@ -243,28 +256,35 @@ export default function ProductDetailClient() {
                         )}
                       </div>
                       <div className="flex gap-2 flex-wrap">
-                        {product.colors.map((color) => (
-                          <button
-                            key={color}
-                            onClick={() => setSelectedColor(color)}
-                            title={color}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-xl border-2 transition-all text-sm font-medium ${
-                              selectedColor === color
-                                ? "border-pink-500 bg-pink-50 text-pink-700"
-                                : "border-gray-200 bg-white text-gray-600 hover:border-pink-300"
-                            }`}
-                          >
-                            <span
-                              className={`w-4 h-4 rounded-full flex-shrink-0 ${
-                                colorDots[color] ?? "bg-gray-300"
+                        {product.colors.map((color) => {
+                          const hasVariantImage = !!product.colorImages?.[color];
+                          return (
+                            <button
+                              key={color}
+                              onClick={() => handleColorSelect(color)}
+                              title={color}
+                              className={`flex items-center gap-2 px-3 py-2 rounded-xl border-2 transition-all text-sm font-medium ${
+                                selectedColor === color
+                                  ? "border-pink-500 bg-pink-50 text-pink-700"
+                                  : "border-gray-200 bg-white text-gray-600 hover:border-pink-300"
                               }`}
-                            />
-                            {color}
-                            {selectedColor === color && (
-                              <CheckCircle2 className="w-3.5 h-3.5 text-pink-500" />
-                            )}
-                          </button>
-                        ))}
+                            >
+                              <span
+                                className={`w-4 h-4 rounded-full flex-shrink-0 ${
+                                  colorDots[color] ?? "bg-gray-300"
+                                }`}
+                              />
+                              {color}
+                              {/* Indikator kamera jika ada gambar variannya */}
+                              {hasVariantImage && (
+                                <span className="text-xs text-pink-400">📷</span>
+                              )}
+                              {selectedColor === color && (
+                                <CheckCircle2 className="w-3.5 h-3.5 text-pink-500" />
+                              )}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   )}

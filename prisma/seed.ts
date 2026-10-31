@@ -9,7 +9,8 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  await prisma.product.deleteMany();
+  // TRUNCATE + reset sequence agar ID selalu mulai dari 1
+  await prisma.$executeRawUnsafe('TRUNCATE TABLE "Product" RESTART IDENTITY CASCADE;');
 
   await prisma.product.createMany({
     data: [
@@ -23,6 +24,12 @@ async function main() {
           "Bra harian yang dibuat dari bahan cotton lembut berkualitas tinggi. Dirancang untuk kenyamanan maksimal sepanjang hari dengan jahitan halus anti-iritasi. Cocok untuk aktivitas sehari-hari di rumah maupun luar ruangan.",
         colors: ["Hitam", "Putih", "Nude", "Abu-abu"],
         sizes: ["A", "B", "C", "D"],
+        colorImages: {
+          Hitam: "/image/hitam daily.png",
+          Putih: "/image/putih daily.png",
+          "Abu-abu": "/image/Abu daily.png",
+          // Nude menggunakan gambar utama (tidak perlu entry khusus)
+        },
       },
       {
         name: "Sport Active Bra",
@@ -34,6 +41,7 @@ async function main() {
           "Sport bra dengan teknologi moisture-wicking yang menyerap keringat dengan cepat. Dilengkapi tali yang dapat disesuaikan dan padding tipis untuk dukungan optimal saat olahraga ringan hingga sedang seperti yoga, pilates, dan jogging.",
         colors: ["Hitam", "Pink", "Biru Navy", "Hijau Tosca"],
         sizes: ["A", "B", "C", "D"],
+        colorImages: {},
       },
       {
         name: "Maternity Comfort Bra",
@@ -45,6 +53,7 @@ async function main() {
           "Bra khusus ibu hamil yang dirancang untuk memberikan kenyamanan ekstra selama masa kehamilan. Bahan yang stretchy mengikuti perubahan ukuran tubuh, dengan tali lebar yang mendistribusikan beban secara merata dan tidak menekan.",
         colors: ["Putih", "Nude", "Abu-abu Muda"],
         sizes: ["B", "C", "D", "E"],
+        colorImages: {},
       },
       {
         name: "Lace Premium Bra",
@@ -56,6 +65,7 @@ async function main() {
           "Bra renda premium dengan desain elegan yang memadukan keindahan dan kenyamanan. Dibuat dari bahan renda berkualitas tinggi yang lembut di kulit. Sempurna untuk tampilan sehari-hari maupun acara spesial.",
         colors: ["Hitam", "Putih", "Merah Marun", "Nude"],
         sizes: ["A", "B", "C", "D", "E"],
+        colorImages: {},
       },
       {
         name: "Seamless T-Shirt Bra",
@@ -67,6 +77,7 @@ async function main() {
           "Bra tanpa jahitan (seamless) yang tidak terlihat di bawah pakaian ketat. Teknologi seamless memberikan tampilan halus dan rapi, ideal untuk dipakai dengan kaos atau blus tipis. Bahan microfiber yang sangat lembut dan breathable.",
         colors: ["Nude", "Hitam", "Putih", "Pink Muda"],
         sizes: ["A", "B", "C", "D"],
+        colorImages: {},
       },
       {
         name: "High Impact Sport Bra",
@@ -78,6 +89,7 @@ async function main() {
           "Sport bra high impact untuk olahraga intensitas tinggi seperti lari, HIIT, dan aerobik. Dilengkapi dengan underwire ringan, padding tebal, dan tali silang di belakang untuk dukungan dan stabilitas maksimal.",
         colors: ["Hitam", "Abu-abu", "Pink Fuchsia", "Biru Royal"],
         sizes: ["B", "C", "D", "E", "F"],
+        colorImages: {},
       },
       {
         name: "Nursing Bra Softcup",
@@ -89,6 +101,7 @@ async function main() {
           "Bra menyusui dengan klip bukaan satu tangan yang memudahkan saat menyusui. Bahan cotton organik yang lembut aman untuk kulit sensitif bayi dan ibu. Cup yang dapat dibuka memudahkan proses menyusui kapan saja dan di mana saja.",
         colors: ["Putih", "Nude", "Biru Muda", "Pink Muda"],
         sizes: ["C", "D", "E", "F"],
+        colorImages: {},
       },
       {
         name: "Push-Up Everyday Bra",
@@ -100,11 +113,12 @@ async function main() {
           "Push-up bra dengan padding anatomis yang memberikan efek push-up natural. Desain yang stylish dengan bahan premium dan underwire nyaman. Meningkatkan kepercayaan diri untuk tampilan sehari-hari yang sempurna.",
         colors: ["Hitam", "Nude", "Putih", "Merah", "Pink"],
         sizes: ["A", "B", "C", "D"],
+        colorImages: {},
       },
     ],
   });
 
-  console.log("✅ Seed berhasil: 8 produk dengan detail lengkap ditambahkan.");
+  console.log("✅ Seed berhasil: 8 produk dengan colorImages ditambahkan.");
 }
 
 main()
