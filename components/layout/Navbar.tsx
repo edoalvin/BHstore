@@ -1,25 +1,41 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, ShoppingBag } from "lucide-react";
 
 const navLinks = [
-  { label: "Beranda", href: "#beranda" },
-  { label: "Produk", href: "#produk" },
-  { label: "Tentang Kami", href: "#tentang" },
-  { label: "Kontak", href: "#kontak" },
+  { label: "Beranda", href: "/#beranda" },
+  { label: "Produk", href: "/#produk" },
+  { label: "Tentang Kami", href: "/#tentang" },
+  { label: "Kontak", href: "/#kontak" },
 ];
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
-  const handleLinkClick = () => setMenuOpen(false);
+  // Jika sudah di halaman utama, scroll smooth ke anchor
+  // Jika di halaman lain, navigate ke / lalu scroll
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    const anchor = href.replace("/", "");
+    if (pathname === "/") {
+      e.preventDefault();
+      const el = document.querySelector(anchor);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+    setMenuOpen(false);
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm shadow-sm">
       <nav className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <a href="#beranda" className="flex items-center gap-2 group">
+        <a href="/#beranda" className="flex items-center gap-2 group">
           <div className="w-9 h-9 rounded-full bg-pink-600 flex items-center justify-center">
             <ShoppingBag className="w-5 h-5 text-white" />
           </div>
@@ -34,6 +50,7 @@ export default function Navbar() {
             <li key={link.href}>
               <a
                 href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className="text-gray-600 hover:text-pink-600 font-medium transition-colors text-sm"
               >
                 {link.label}
@@ -44,7 +61,8 @@ export default function Navbar() {
 
         {/* CTA Button */}
         <a
-          href="#produk"
+          href="/#produk"
+          onClick={(e) => handleNavClick(e, "/#produk")}
           className="hidden md:inline-flex items-center gap-2 bg-pink-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-pink-700 transition-colors"
         >
           <ShoppingBag className="w-4 h-4" />
@@ -68,15 +86,15 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              onClick={handleLinkClick}
+              onClick={(e) => handleNavClick(e, link.href)}
               className="text-gray-700 hover:text-pink-600 font-medium py-1 transition-colors"
             >
               {link.label}
             </a>
           ))}
           <a
-            href="#produk"
-            onClick={handleLinkClick}
+            href="/#produk"
+            onClick={(e) => handleNavClick(e, "/#produk")}
             className="inline-flex items-center justify-center gap-2 bg-pink-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-pink-700 transition-colors mt-2"
           >
             <ShoppingBag className="w-4 h-4" />

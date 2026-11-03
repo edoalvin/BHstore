@@ -101,6 +101,7 @@ export default function ProductDetailClient() {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [displayImage, setDisplayImage] = useState<string>("");
+  const [imageTransition, setImageTransition] = useState<"idle" | "out" | "in">("idle");
 
   useEffect(() => {
     if (!params.id) return;
@@ -130,13 +131,22 @@ export default function ProductDetailClient() {
     fetchProduct();
   }, [params.id]);
 
-  // Ganti gambar saat warna dipilih
+  // Ganti gambar dengan efek slide saat warna dipilih
   const handleColorSelect = (color: string) => {
-    setSelectedColor(color);
-    if (!product) return;
-    // Cek apakah ada gambar untuk warna ini, kalau tidak pakai gambar utama
+    if (color === selectedColor || !product) return;
+
     const colorImg = product.colorImages?.[color];
-    setDisplayImage(colorImg ?? product.image);
+    const nextImage = colorImg ?? product.image;
+
+    // Phase 1: slide out
+    setImageTransition("out");
+    setTimeout(() => {
+      setDisplayImage(nextImage);
+      setSelectedColor(color);
+      // Phase 2: slide in
+      setImageTransition("in");
+      setTimeout(() => setImageTransition("idle"), 350);
+    }, 250);
   };
 
   const waMessage = product
@@ -192,7 +202,13 @@ export default function ProductDetailClient() {
                     alt={`${product.name}${selectedColor ? ` - ${selectedColor}` : ""}`}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover transition-opacity duration-300"
+                    className={`object-cover transition-all duration-300 ease-in-out ${
+                      imageTransition === "out"
+                        ? "opacity-0 scale-95 translate-x-4"
+                        : imageTransition === "in"
+                        ? "opacity-0 -translate-x-4 scale-95"
+                        : "opacity-100 scale-100 translate-x-0"
+                    }`}
                     priority
                   />
                   {product.badge && (
@@ -202,7 +218,7 @@ export default function ProductDetailClient() {
                   )}
                   {/* Label warna aktif di atas gambar */}
                   {selectedColor && (
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm">
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm transition-opacity duration-300">
                       {selectedColor}
                     </div>
                   )}

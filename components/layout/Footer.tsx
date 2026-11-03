@@ -1,5 +1,12 @@
 import { ShoppingBag, Camera, Phone } from "lucide-react";
 
+const navItems = [
+  { label: "Beranda", href: "/#beranda" },
+  { label: "Produk", href: "/#produk" },
+  { label: "Tentang Kami", href: "/#tentang" },
+  { label: "Kontak", href: "/#kontak" },
+];
+
 export default function Footer() {
   return (
     <footer className="bg-pink-900 text-pink-100">
@@ -7,14 +14,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
+            <a href="/#beranda" className="flex items-center gap-2 mb-4">
               <div className="w-9 h-9 rounded-full bg-pink-400 flex items-center justify-center">
                 <ShoppingBag className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-white">
                 BH<span className="text-pink-300">store</span>
               </span>
-            </div>
+            </a>
             <p className="text-pink-300 text-sm leading-relaxed">
               Toko pakaian dalam wanita terpercaya dengan bahan berkualitas dan
               harga yang terjangkau.
@@ -25,13 +32,13 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-white mb-4">Navigasi</h3>
             <ul className="space-y-2 text-sm">
-              {["Beranda", "Produk", "Tentang Kami", "Kontak"].map((item) => (
-                <li key={item}>
+              {navItems.map((item) => (
+                <li key={item.href}>
                   <a
-                    href={`#${item.toLowerCase().replace(" ", "")}`}
+                    href={item.href}
                     className="text-pink-300 hover:text-white transition-colors"
                   >
-                    {item}
+                    {item.label}
                   </a>
                 </li>
               ))}

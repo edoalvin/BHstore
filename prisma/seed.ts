@@ -22,13 +22,13 @@ async function main() {
         badge: "Terlaris",
         description:
           "Bra harian yang dibuat dari bahan cotton lembut berkualitas tinggi. Dirancang untuk kenyamanan maksimal sepanjang hari dengan jahitan halus anti-iritasi. Cocok untuk aktivitas sehari-hari di rumah maupun luar ruangan.",
-        colors: ["Hitam", "Putih", "Nude", "Abu-abu"],
+        colors: ["Nude", "Hitam", "Putih", "Abu-abu"],
         sizes: ["A", "B", "C", "D"],
         colorImages: {
-          Hitam: "/image/hitam daily.png",
-          Putih: "/image/putih daily.png",
-          "Abu-abu": "/image/Abu daily.png",
-          // Nude menggunakan gambar utama (tidak perlu entry khusus)
+          Hitam: "/image/daily hitam.png",
+          Putih: "/image/daily putih.png",
+          "Abu-abu": "/image/daily abu.png",
+          // Nude → gambar utama daily bra.jpeg
         },
       },
       {
@@ -41,7 +41,12 @@ async function main() {
           "Sport bra dengan teknologi moisture-wicking yang menyerap keringat dengan cepat. Dilengkapi tali yang dapat disesuaikan dan padding tipis untuk dukungan optimal saat olahraga ringan hingga sedang seperti yoga, pilates, dan jogging.",
         colors: ["Hitam", "Pink", "Biru Navy", "Hijau Tosca"],
         sizes: ["A", "B", "C", "D"],
-        colorImages: {},
+        colorImages: {
+          // Hitam → gambar utama sport bra.jpeg
+          Pink: "/image/Pink sport.png",
+          "Biru Navy": "/image/Navy sport.png",
+          "Hijau Tosca": "/image/Hijau sport.png",
+        },
       },
       {
         name: "Maternity Comfort Bra",
@@ -53,7 +58,11 @@ async function main() {
           "Bra khusus ibu hamil yang dirancang untuk memberikan kenyamanan ekstra selama masa kehamilan. Bahan yang stretchy mengikuti perubahan ukuran tubuh, dengan tali lebar yang mendistribusikan beban secara merata dan tidak menekan.",
         colors: ["Putih", "Nude", "Abu-abu Muda"],
         sizes: ["B", "C", "D", "E"],
-        colorImages: {},
+        colorImages: {
+          // Putih → gambar utama maternity bra.jpeg
+          Nude: "/image/maternity nude.png",
+          "Abu-abu Muda": "/image/maternity Abu.png",
+        },
       },
       {
         name: "Lace Premium Bra",
@@ -65,7 +74,12 @@ async function main() {
           "Bra renda premium dengan desain elegan yang memadukan keindahan dan kenyamanan. Dibuat dari bahan renda berkualitas tinggi yang lembut di kulit. Sempurna untuk tampilan sehari-hari maupun acara spesial.",
         colors: ["Hitam", "Putih", "Merah Marun", "Nude"],
         sizes: ["A", "B", "C", "D", "E"],
-        colorImages: {},
+        colorImages: {
+          // Hitam → gambar utama lace bra.jpeg
+          Putih: "/image/lace putih.png",
+          "Merah Marun": "/image/lace maroon.png",
+          Nude: "/image/lace nude.png",
+        },
       },
       {
         name: "Seamless T-Shirt Bra",
@@ -77,12 +91,17 @@ async function main() {
           "Bra tanpa jahitan (seamless) yang tidak terlihat di bawah pakaian ketat. Teknologi seamless memberikan tampilan halus dan rapi, ideal untuk dipakai dengan kaos atau blus tipis. Bahan microfiber yang sangat lembut dan breathable.",
         colors: ["Nude", "Hitam", "Putih", "Pink Muda"],
         sizes: ["A", "B", "C", "D"],
-        colorImages: {},
+        colorImages: {
+          // Nude → gambar utama seamless bra.jpeg
+          Hitam: "/image/seamless hitam.png",
+          Putih: "/image/seamless putih.png",
+          "Pink Muda": "/image/seamless pink.png",
+        },
       },
       {
         name: "High Impact Sport Bra",
         price: 135000,
-        image: "/image/sport bra.jpeg",
+        image: "/image/high impact.jpeg",
         category: "sport",
         badge: null,
         description:
@@ -118,7 +137,7 @@ async function main() {
     ],
   });
 
-  console.log("✅ Seed berhasil: 8 produk dengan colorImages ditambahkan.");
+  console.log("✅ Seed berhasil: 8 produk dengan colorImages lengkap.");
 }
 
 main()
