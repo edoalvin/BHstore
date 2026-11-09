@@ -108,7 +108,12 @@ async function main() {
           "Sport bra high impact untuk olahraga intensitas tinggi seperti lari, HIIT, dan aerobik. Dilengkapi dengan underwire ringan, padding tebal, dan tali silang di belakang untuk dukungan dan stabilitas maksimal.",
         colors: ["Hitam", "Abu-abu", "Pink Fuchsia", "Biru Royal"],
         sizes: ["B", "C", "D", "E", "F"],
-        colorImages: {},
+        colorImages: {
+          // Hitam → gambar utama high impact.jpeg
+          "Abu-abu": "/image/high abu abu.png",
+          "Pink Fuchsia": "/image/high pink.png",
+          "Biru Royal": "/image/high biru royal.png",
+        },
       },
       {
         name: "Nursing Bra Softcup",
@@ -118,9 +123,14 @@ async function main() {
         badge: null,
         description:
           "Bra menyusui dengan klip bukaan satu tangan yang memudahkan saat menyusui. Bahan cotton organik yang lembut aman untuk kulit sensitif bayi dan ibu. Cup yang dapat dibuka memudahkan proses menyusui kapan saja dan di mana saja.",
-        colors: ["Putih", "Nude", "Biru Muda", "Pink Muda"],
+        colors: ["Nude", "Putih", "Biru Muda", "Pink Muda"],
         sizes: ["C", "D", "E", "F"],
-        colorImages: {},
+        colorImages: {
+          // Nude → gambar utama nursing bra.jpeg
+          Putih: "/image/nursing putih.png",
+          "Biru Muda": "/image/nursing blue.png",
+          "Pink Muda": "/image/nursing pink.png",
+        },
       },
       {
         name: "Push-Up Everyday Bra",
@@ -132,7 +142,13 @@ async function main() {
           "Push-up bra dengan padding anatomis yang memberikan efek push-up natural. Desain yang stylish dengan bahan premium dan underwire nyaman. Meningkatkan kepercayaan diri untuk tampilan sehari-hari yang sempurna.",
         colors: ["Hitam", "Nude", "Putih", "Merah", "Pink"],
         sizes: ["A", "B", "C", "D"],
-        colorImages: {},
+        colorImages: {
+          // Hitam → gambar utama push up bra.jpeg
+          Nude: "/image/push up nude.png",
+          Putih: "/image/push up putih.png",
+          Merah: "/image/push up merah.png",
+          Pink: "/image/push up pink.png",
+        },
       },
     ],
   });

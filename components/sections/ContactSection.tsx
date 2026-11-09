@@ -107,7 +107,7 @@ export default function ContactSection() {
 
             {/* Reassurance */}
             <p className="text-pink-200 text-sm mt-6">
-              ✅ Respon cepat · ✅ Ramah · ✅ No hard selling
+              Respon cepat · Ramah · No hard selling
             </p>
           </div>
         </div>

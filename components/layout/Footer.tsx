@@ -69,7 +69,7 @@ export default function Footer() {
               </a>
             </div>
             <p className="text-pink-300 text-sm mt-4">
-              📍 Jl. Contoh No. 123, Jakarta
+              Jl. Contoh No. 123, Jakarta
             </p>
           </div>
         </div>

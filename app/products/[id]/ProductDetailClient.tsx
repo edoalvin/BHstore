@@ -11,7 +11,6 @@ import {
   Layers,
   Palette,
   Ruler,
-  CheckCircle2,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -267,14 +266,12 @@ export default function ProductDetailClient() {
                         Pilihan Warna
                         {selectedColor && (
                           <span className="text-pink-600 font-normal ml-1">
-                            — {selectedColor}
+                            {selectedColor}
                           </span>
                         )}
                       </div>
                       <div className="flex gap-2 flex-wrap">
-                        {product.colors.map((color) => {
-                          const hasVariantImage = !!product.colorImages?.[color];
-                          return (
+                        {product.colors.map((color) => (
                             <button
                               key={color}
                               onClick={() => handleColorSelect(color)}
@@ -291,16 +288,8 @@ export default function ProductDetailClient() {
                                 }`}
                               />
                               {color}
-                              {/* Indikator kamera jika ada gambar variannya */}
-                              {hasVariantImage && (
-                                <span className="text-xs text-pink-400">📷</span>
-                              )}
-                              {selectedColor === color && (
-                                <CheckCircle2 className="w-3.5 h-3.5 text-pink-500" />
-                              )}
                             </button>
-                          );
-                        })}
+                          ))}
                       </div>
                     </div>
                   )}
@@ -313,7 +302,7 @@ export default function ProductDetailClient() {
                         Pilihan Ukuran
                         {selectedSize && (
                           <span className="text-pink-600 font-normal ml-1">
-                            — {selectedSize}
+                            {selectedSize}
                           </span>
                         )}
                       </div>
